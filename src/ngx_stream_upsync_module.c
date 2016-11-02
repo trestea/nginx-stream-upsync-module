@@ -299,6 +299,7 @@ static ngx_command_t  ngx_stream_upsync_commands[] = {
 
 
 static ngx_stream_module_t  ngx_stream_upsync_module_ctx = {
+    NULL,                                       /* preconfiguration */
     NULL,                                       /* postconfiguration */
 
     ngx_stream_upsync_create_main_conf,         /* create main configuration */
@@ -3701,7 +3702,7 @@ ngx_stream_upsync_show(ngx_stream_session_t *s)
         ngx_log_error(NGX_LOG_ERR, s->connection->log, 0, 
                       "alloc upsync_show buf failed");
 
-        ngx_stream_close_connection(s->connection);
+        ngx_stream_finalize_session(s, NGX_OK);
         return;
     }
 
@@ -3730,7 +3731,7 @@ ngx_stream_upsync_show(ngx_stream_session_t *s)
  
     ngx_stream_upsync_show_send(s, b); //send body
 
-    ngx_stream_close_connection(s->connection);
+    ngx_stream_finalize_session(s, NGX_OK);
 
     return;
 }
